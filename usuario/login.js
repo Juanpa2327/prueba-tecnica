@@ -2,6 +2,10 @@ const app = require("express");
 const bcrypt = require("bcryptjs");
 const connection = require("../bbdd"); 
 const router = app.Router();
+const jwt = require("jsonwebtoken");
+
+// Clave secreta para firmar los tokens (¡guárdala en variables de entorno!)
+const JWT_SECRET = "mi_super_secreta_clave";
 
 // Ruta para login
 router.post("/login", (req, res) => {
@@ -23,9 +27,6 @@ router.post("/login", (req, res) => {
     }
 
     const user = results[0];
-
-    console.log(password);
-    console.log(user.password);
     
 
     // Comparamos la contraseña ingresada con la guardada (encriptada)
@@ -34,8 +35,17 @@ router.post("/login", (req, res) => {
     if (!match) {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
     }
+
+    // Generamos token con los datos del usuario
+    const token = jwt.sign(
+      { id: user.id, username: user.usuario, role: user.rol }, // payload
+      JWT_SECRET,
+      { expiresIn: "1h" } // expira en 1 hora
+    );
+
+  res.status(200).json({message: "Login exitoso", token: token});
+
   });
-  res.status(200).json({message: "Login exitoso"});
 });
 
 module.exports = router;
