@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Juanpa2327/prueba-tecnica#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
     "mysql2": "^3.14.3"
   }
