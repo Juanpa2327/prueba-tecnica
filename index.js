@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const db = require("./bbdd");  
 app.use(express.json());
 
 // rutas de registro

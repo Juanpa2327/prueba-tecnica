@@ -1,33 +1,29 @@
 const app = require("express");
 const bcrypt = require("bcryptjs");
-const connection = require("../bbdd"); 
 const router = app.Router();
 const jwt = require("jsonwebtoken");
+const Usuario = require("../models/user");
 
 // Clave secreta para firmar los tokens (¡guárdala en variables de entorno!)
 const JWT_SECRET = "mi_super_secreta_clave";
 
 // Ruta para login
-router.post("/login", (req, res) => {
-  const { usuario, password } = req.body;
+router.post("/login",async(req, res) => {
 
-  // Verificamos que no lleguen datos vacíos
-  if (!usuario || !password) {
-    return res.status(400).json({ message: "Usuario y contraseña son requeridos" });
-  }
+    try {
+    const { usuario, password } = req.body;
 
-  // Consultamos al usuario en la base de datos
-  connection.query("SELECT * FROM usuarios WHERE usuario = ?", [usuario], async (err, results) => {
-    if (err) {
-      return res.status(500).json({ message: "Error en el servidor", error: err });
+    // Verificamos que no lleguen datos vacíos
+    if (!usuario || !password) {
+      return res.status(400).json({ message: "Usuario y contraseña son requeridos" });
     }
 
-    if (results.length === 0) {
-      return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
-    }
-
-    const user = results[0];
+    // Consultamos al usuario en la base de datos
+    const user = await Usuario.findOne({ where: { usuario } });
     
+    if (!user) {
+        return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+      }
 
     // Comparamos la contraseña ingresada con la guardada (encriptada)
     const match = await bcrypt.compare(password, user.password);
@@ -43,9 +39,13 @@ router.post("/login", (req, res) => {
       { expiresIn: "1h" } // expira en 1 hora
     );
 
-  res.status(200).json({message: "Login exitoso", token: token});
+    res.status(200).json({message: "Login exitoso", token: token});
 
-  });
+  } catch (error) {
+    console.error("Error en login:", error);
+    res.status(500).json({ message: "Error en el servidor" });
+  } 
+
 });
 
 module.exports = router;
