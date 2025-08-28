@@ -8,14 +8,14 @@ const Producto = require("../models/producto");
 //ver productos
 router.get("/historial", authMiddleware, async (req,     res) => {
   try {
-    //requisito de rol
+
     if (req.user.role !== "cliente") {
       return res.status(403).json({ error: "Acceso denegado" });
     }
 
     const userId = req.user.id;
 
-    // Traer las compras del usuario con los detalles y productos
+    // compras del usuario
     const historial = await Compra.findAll({
       where: { id_usuario: userId },
       include: [

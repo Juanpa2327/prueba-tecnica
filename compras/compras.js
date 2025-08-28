@@ -57,7 +57,7 @@ router.post("/compras", authMiddleware, async (req, res) => {
         precio_unitario: det.precio_unitario
       });
     }
-    // Recuperar factura con datos completos
+    // Recuperar factura 
     const factura = await Compra.findOne({
       where: { id: compra.id },
       include: [
@@ -78,7 +78,7 @@ router.post("/compras", authMiddleware, async (req, res) => {
     });
     
 
-    // Formatear respuesta tipo factura
+    //respuesta tipo factura
 const response = {
   id_compra: factura.id, // o factura.id_compra según tu modelo
   fecha_compra: factura.fecha_compra,

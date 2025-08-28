@@ -4,7 +4,7 @@ const router = app.Router();
 const jwt = require("jsonwebtoken");
 const Usuario = require("../models/user");
 
-// Clave secreta para firmar los tokens (¡guárdala en variables de entorno!)
+// Clave secreta
 const JWT_SECRET = "mi_super_secreta_clave";
 
 // Ruta para login
@@ -13,30 +13,29 @@ router.post("/login",async(req, res) => {
     try {
     const { usuario, password } = req.body;
 
-    // Verificamos que no lleguen datos vacíos
+
     if (!usuario || !password) {
       return res.status(400).json({ message: "Usuario y contraseña son requeridos" });
     }
 
-    // Consultamos al usuario en la base de datos
+    // consulta de usuario en la base de datos
     const user = await Usuario.findOne({ where: { usuario } });
     
     if (!user) {
         return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
       }
 
-    // Comparamos la contraseña ingresada con la guardada (encriptada)
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
     }
 
-    // Generamos token con los datos del usuario
+    // generar token
     const token = jwt.sign(
-      { id: user.id, username: user.usuario, role: user.rol }, // payload
+      { id: user.id, username: user.usuario, role: user.rol }, 
       JWT_SECRET,
-      { expiresIn: "1h" } // expira en 1 hora
+      { expiresIn: "1h" } 
     );
 
     res.status(200).json({message: "Login exitoso", token: token});
