@@ -1,5 +1,4 @@
-const app = require("express");
-const db = require("../bbdd");  
+const app = require("express"); 
 const router = app.Router();
 const authMiddleware = require("../auth");
 const Producto = require("../models/producto");
