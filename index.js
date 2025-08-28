@@ -16,4 +16,12 @@ app.use(productosRoutes);
 const comprasRoutes = require("./compras/compras");
 app.use(comprasRoutes);
 
+//Ruta index
+
+app.get("/", (req, res) => res.json({ 
+    
+    Mensaje: "Welcome"
+
+}));
+
 app.listen(3000, () => console.log("Servidor corriendo en puerto 3000"));

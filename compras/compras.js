@@ -10,11 +10,13 @@ router.post("/compras", authMiddleware, async (req, res) => {
     if (req.user.role !== "cliente") {
       return res.status(403).json({ error: "Acceso denegado, compras habilitadas para clientes" });
     }
+    
 
-    const { id_usuario, productos } = req.body;
+    const {productos } = req.body;
 
     let total = 0;
     const detalles = [];
+    const id_usuario = req.user.id;
 
     // Verificar stock
     for (const item of productos) {

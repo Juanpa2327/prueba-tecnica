@@ -23,8 +23,8 @@ const Producto = sequelize.define("Producto", {
     unique: true,
   },
   fecha_ingr: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW, 
   },
 }, {
   tableName: "productos",
