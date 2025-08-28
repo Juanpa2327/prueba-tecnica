@@ -9,8 +9,8 @@ const Producto = require("../models/producto");
 router.get("/historial", authMiddleware, async (req,     res) => {
   try {
     //requisito de rol
-    if (req.user.role !== "administrador") {
-      return res.status(403).json({ error: "Acceso denegado, solo administradores" });
+    if (req.user.role !== "cliente") {
+      return res.status(403).json({ error: "Acceso denegado" });
     }
 
     const userId = req.user.id;
