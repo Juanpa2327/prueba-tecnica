@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../bbdd");
 const Usuario = require("./user");
+const DetalleCompra = require("./detalle_compra");
 
 const Compra = sequelize.define("Compra", {
   id: {
@@ -16,17 +17,17 @@ const Compra = sequelize.define("Compra", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
-  id_usuario: {
+id_usuario: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: Usuario,
-      key: "id_usuario",
-    }
-  }
+  },
 }, {
   tableName: "compras",
   timestamps: false
 });
+
+
+Compra.hasMany(DetalleCompra, { foreignKey: "id_compra" });
+DetalleCompra.belongsTo(Compra, { foreignKey: "id_compra" });
 
 module.exports = Compra;

@@ -4,6 +4,7 @@ const authMiddleware = require("../auth");
 const Producto = require("../models/producto");
 const Compra = require("../models/compras");
 const DetalleCompra = require("../models/detalle_compra");
+const Usuario = require("../models/user");
 
 router.post("/compras", authMiddleware, async (req, res) => {
   try {
@@ -56,8 +57,42 @@ router.post("/compras", authMiddleware, async (req, res) => {
         precio_unitario: det.precio_unitario
       });
     }
+    // Recuperar factura con datos completos
+    const factura = await Compra.findOne({
+      where: { id: compra.id },
+      include: [
+        {
+          model: Usuario,
+          attributes: ["id", "usuario", "nombre"] // ajusta según columnas que tengas
+        },
+        {
+          model: DetalleCompra,
+          include: [
+            {
+              model: Producto,
+              attributes: ["num_lote", "nombre", "precio"]
+            }
+          ]
+        }
+      ]
+    });
+    
 
-    res.status(201).json({ msg: "Compra realizada con éxito", compra });
+    // Formatear respuesta tipo factura
+const response = {
+  id_compra: factura.id, // o factura.id_compra según tu modelo
+  fecha_compra: factura.fecha_compra,
+  cliente: factura.Usuario.nombre,
+  productos: factura.detalle_compras.map(det => ({
+    nombre: det.Producto.nombre,
+    cantidad: det.cantidad,
+    precio_unitario: det.precio_unitario,
+    subtotal: det.subtotal
+  })),
+  total: factura.total
+};
+
+    res.status(201).json({ msg: "Compra realizada con éxito", factura: response });
 
   } catch (error) {
     console.error(error);

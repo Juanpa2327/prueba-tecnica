@@ -12,18 +12,10 @@ const DetalleCompra = sequelize.define("detalle_compra", {
   id_compra: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: Compra,
-      key: "id_compra",
-    }
   },
   id_producto: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: Producto,
-      key: "id_producto",
-    }
   },
   cantidad: {
     type: DataTypes.INTEGER,
@@ -41,5 +33,8 @@ const DetalleCompra = sequelize.define("detalle_compra", {
   tableName: "detalle_compras",
   timestamps: false
 });
+
+DetalleCompra.belongsTo(Producto, { foreignKey: "id_producto" });
+Producto.hasMany(DetalleCompra, { foreignKey: "id_producto" });
 
 module.exports = DetalleCompra;

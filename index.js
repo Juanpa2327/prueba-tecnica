@@ -14,7 +14,9 @@ app.use(productosRoutes);
 
 //rutas comrpas
 const comprasRoutes = require("./compras/compras");
+const HistorialRoutes = require("./compras/historial");
 app.use(comprasRoutes);
+app.use(HistorialRoutes);
 
 //Ruta index
 

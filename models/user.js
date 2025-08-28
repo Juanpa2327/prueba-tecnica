@@ -1,6 +1,7 @@
 // models/Usuario.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../bbdd");
+const Compra = require("./compras");
 
 const Usuario = sequelize.define("Usuario", {
   id: {
@@ -29,5 +30,8 @@ const Usuario = sequelize.define("Usuario", {
   tableName: "usuarios",
   timestamps: false     
 });
+
+Usuario.hasMany(Compra, { foreignKey: "id_usuario" });
+Compra.belongsTo(Usuario, { foreignKey: "id_usuario" });
 
 module.exports = Usuario;
